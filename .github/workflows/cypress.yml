@@ -1,0 +1,34 @@
+
+name: Cypress Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cypress:
+    name: Executar testes E2E
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v7
+
+      - name: Instalar dependências e executar Cypress
+        uses: cypress-io/github-action@v7
+        with:
+          browser: chrome
+
+      - name: Salvar relatório dos testes
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: relatorio-cypress
+          path: cypress/reports/
+          if-no-files-found: warn
